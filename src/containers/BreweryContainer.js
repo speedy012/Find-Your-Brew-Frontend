@@ -1,5 +1,6 @@
 import React from 'react'
 import BreweryCard from './BreweryCard'
+import "materialize-css/dist/css/materialize.min.css"
 
 class BreweryContainer extends React.Component {
 
@@ -7,8 +8,9 @@ class BreweryContainer extends React.Component {
     return this.props.allBreweries.map(brewery =>{
       return <
       BreweryCard
+      key={brewery.id}
       brewery={brewery}
-      handleClick={this.props.handleClick} 
+      handleClick={this.props.handleClick}
       />
     })
   }
