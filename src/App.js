@@ -18,13 +18,21 @@ class App extends React.Component {
     userBreweries: [],
     searchTerm: '',
     isLogged: false,
-    userInputName: ""
+    userInputName: "",
+    currentUser: ""
   }
 
   changesLog = (e) => {
     e.preventDefault()
     this.setState({isLogged: !this.state.isLogged})
      this.props.history.push("/")
+     fetch("http://localhost:3000/users/1")
+     .then(res => res.json())
+     .then(data => {
+       this.setState({
+         currentUser: data
+       })
+     })
   }
 
   getUserName = (e) => {
@@ -34,9 +42,25 @@ class App extends React.Component {
   }
 
   handleClick = (props) =>{
+    console.log("favorite",props.brewery.id)
     this.setState({
       userBreweries: [...this.state.userBreweries, props]
     })
+    //working on this
+    // fetch("http//:localhost:3000/favorites", {
+    //   method: "POST",
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'Accept': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     user_id: this.state.currentUser.id,
+    //     brewery_id: props.brewery.id
+    //   })
+    //
+    // })
+    // .then(res=>res.json())
+    // .then(console.log())
   }
 
   setSearchTerm = (newSearchTerm) =>{
@@ -64,6 +88,7 @@ class App extends React.Component {
   render() {
     // console.log('app', this.state.userBreweries)
     console.log('app', this.state.isLogged)
+    console.log(this.state.currentUser.id)
     return (
       <React.Fragment>
         <h1> Find Your Brew </h1>
@@ -79,12 +104,13 @@ class App extends React.Component {
           <Route exact path="/signup" render={()=> <SignUp/>}/>
         </Switch>
         <SearchBar
-        searchTerm={this.state.searchTerm}
-        setSearchTerm={this.setSearchTerm}
+          searchTerm={this.state.searchTerm}
+          setSearchTerm={this.setSearchTerm}
         />
         <BreweryContainer
          allBreweries={this.applySearch()}
          handleClick={this.handleClick}/>
+
       </React.Fragment>
     )
   }
