@@ -4,13 +4,23 @@ import { Link } from 'react-router-dom'
 
 class NavBar extends React.Component {
   render() {
+    console.log('navbar', this.props);
     return(
+
       <div className="nav-wrapper">
       <React.Fragment>
-      <Link to="/">Home</Link>
-      <Link to="/login">Login</Link>
-      <Link to="/signup">Sign Up</Link>
-      NavBar
+        {!this.props.isLogged ?
+          <div>
+            <Link to="/">Home</Link>&nbsp;
+            <Link to="/login">Login</Link>&nbsp;
+
+          </div>
+          :
+          <div>
+            <Link to="/">Home</Link>&nbsp;
+            <Link to="/profile">Profile</Link>&nbsp;
+          </div>
+          }
       </React.Fragment>
       </div>
     )
