@@ -1,6 +1,7 @@
 import React from 'react';
 // import logo from './logo.svg';
-import './App.css';
+// import './App.css';
+import "materialize-css/dist/css/materialize.min.css"
 import NavBar from './containers/NavBar'
 import ProfilePage from './containers/ProfilePage'
 import BreweryContainer from './containers/BreweryContainer'
@@ -15,6 +16,7 @@ class App extends React.Component {
   state = {
     allBreweries: [],
     userBreweries: [],
+    searchTerm: '',
     isLogged: false,
     userInputName: ""
   }
@@ -34,6 +36,18 @@ class App extends React.Component {
   handleClick = (props) =>{
     this.setState({
       userBreweries: [...this.state.userBreweries, props]
+    })
+  }
+
+  setSearchTerm = (newSearchTerm) =>{
+    this.setState({
+      searchTerm: newSearchTerm
+    })
+  }
+
+  applySearch = () =>{
+    return this.state.allBreweries.filter(brewery=> {
+      return brewery.name.toLowerCase().includes(this.state.searchTerm.toLowerCase())
     })
   }
 
@@ -64,8 +78,12 @@ class App extends React.Component {
           }}/>
           <Route exact path="/signup" render={()=> <SignUp/>}/>
         </Switch>
+        <SearchBar
+        searchTerm={this.state.searchTerm}
+        setSearchTerm={this.setSearchTerm}
+        />
         <BreweryContainer
-         allBreweries={this.state.allBreweries}
+         allBreweries={this.applySearch()}
          handleClick={this.handleClick}/>
       </React.Fragment>
     )
