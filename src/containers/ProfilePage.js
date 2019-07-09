@@ -3,7 +3,7 @@ import React from 'react'
 class ProfilePage extends React.Component {
   render() {
     return(
-      <div>Profile Page</div>
+      <div>Hi,{this.props.currentUserInput}!</div>
     )
   }
 }

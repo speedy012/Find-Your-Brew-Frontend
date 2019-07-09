@@ -8,7 +8,6 @@ class BreweryContainer  extends React.Component {
         BreweryContainer
         <BreweryCard/>
       </div>
-
     )
   }
 }
