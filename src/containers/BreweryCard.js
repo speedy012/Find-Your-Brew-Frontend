@@ -1,11 +1,14 @@
 import React from 'react'
 
-class BreweryCard extends React.Component {
-  render() {
-    return(
-      <div>BreweryCard</div>
-    )
-  }
+const BreweryCard = (props) =>{
+
+  return(
+    <div onClick={()=> props.handleClick(props.brewery)}>
+      <div>
+      {props.brewery.name}
+      </div>
+    </div>
+  )
 }
 
 export default BreweryCard

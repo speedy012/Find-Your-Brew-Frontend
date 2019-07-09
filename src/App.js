@@ -11,8 +11,29 @@ import Login from './components/Login'
 
 class App extends React.Component {
 
-  render() {
+  state = {
+    allBreweries: [],
+    userBreweries: []
+  }
 
+  handleClick = (props) =>{
+    this.setState({
+      userBreweries: [...this.state.userBreweries, props]
+    })
+  }
+
+  componentDidMount(){
+    fetch("http://localhost:3000/breweries")
+    .then(res=>res.json())
+    .then(data=>{
+      this.setState({
+        allBreweries: data
+      })
+    })
+  }
+
+  render() {
+    console.log(this.state.userBreweries)
     return (
       <React.Fragment>
         <h1> Find Your Brew </h1>
@@ -22,6 +43,9 @@ class App extends React.Component {
           <Route exact path="/login" render={()=> <Login/>}/>
           <Route exact path="/signup" render={()=> <SignUp/>}/>
         </Switch>
+        <BreweryContainer
+         allBreweries={this.state.allBreweries}
+         handleClick={this.handleClick}/>
       </React.Fragment>
     )
   }
