@@ -10,7 +10,7 @@ class BreweryContainer extends React.Component {
       BreweryCard
       key={brewery.id}
       brewery={brewery}
-      handleClick={this.props.handleClick}
+      handleClick={this.props.handleAddClick}
       />
     })
   }

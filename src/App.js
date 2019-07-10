@@ -20,7 +20,6 @@ class App extends React.Component {
     isLogged: false,
     userInputName: "",
     currentUser: "",
-    currentBrewery: null,
     loading: true
   }
 
@@ -43,7 +42,7 @@ class App extends React.Component {
     this.setState({[e.target.name]: e.target.value})
   }
 
-  handleClick = (props) =>{
+  handleAddClick = (props) =>{
     this.state.currentUser ?
       this.upLink(props)
       :
@@ -52,8 +51,7 @@ class App extends React.Component {
 
   upLink = (props)=>{
     this.addToFavoriteState(props)
-    console.log("favorite", props.brewery.id)
-
+    // console.log("favorite", props.brewery.id)
     fetch("http://localhost:3000/favorites", {
       method: "POST",
       headers: {
@@ -70,8 +68,29 @@ class App extends React.Component {
   }
 
   addToFavoriteState = (props) =>{
+    let brewery = props.brewery
+    brewery.fave = true
+    console.log(brewery)
     this.setState({
-      userBreweries: [...this.state.userBreweries, props.brewery]
+      userBreweries: [...this.state.userBreweries, brewery]
+    })
+  }
+
+  handleRemoveClick = (props) =>{
+    let foundBrewery = this.state.userBreweries.find(brewery => brewery.id === props.brewery.id)
+    foundBrewery.fave = false
+    console.log(foundBrewery)
+    let updatedArr = []
+    this.state.userBreweries.map(brewery =>{
+      if (brewery.id === foundBrewery.id){
+
+      } else {
+        updatedArr.push(brewery)
+      }
+    })
+    this.setState({
+      userBreweries: updatedArr,
+      allBreweries: [...this.state.allBreweries, foundBrewery]
     })
   }
 
@@ -88,6 +107,8 @@ class App extends React.Component {
     })
   }
 
+
+
   componentDidMount(){
     fetch("http://localhost:3000/breweries")
     .then(res=>res.json())
@@ -100,7 +121,7 @@ class App extends React.Component {
   }
 
   render() {
-    // console.log('app', this.state.userBreweries)
+    console.log('app', this.state.userBreweries)
     // console.log('app', this.state.currentBrewery)
     if (this.state.loading){
       return (
@@ -128,6 +149,7 @@ class App extends React.Component {
             <ProfilePage
             userBreweries={this.state.userBreweries}
             isLogged={this.state.isLogged}
+            handleRemoveClick={this.handleRemoveClick}
             />
             <SearchBar
             searchTerm={this.state.searchTerm}
@@ -135,7 +157,7 @@ class App extends React.Component {
             />
             <BreweryContainer
              allBreweries={this.applySearch()}
-             handleClick={this.handleClick}/>
+             handleAddClick={this.handleAddClick}/>
           </React.Fragment>
         </div>
       )
