@@ -60,6 +60,10 @@ class App extends React.Component {
       userBreweries: [...this.state.userBreweries, props.brewery]
     });
 }
+    this.setState({
+      userBreweries: [...this.state.userBreweries, props]
+    })
+
 
   setSearchTerm = (newSearchTerm) =>{
     this.setState({
@@ -108,6 +112,7 @@ class App extends React.Component {
            handleClick={this.handleClick}/>
         </React.Fragment>
       </div>
+
     )
   }
 }
