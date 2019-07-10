@@ -27,7 +27,7 @@ class App extends React.Component {
     e.preventDefault()
     this.setState({isLogged: !this.state.isLogged})
     this.props.history.push("/")
-    fetch("http://localhost:3000/users/1")
+    fetch("http://localhost:3000/users/2")
     .then(res => res.json())
     .then(data => {
       this.setState({
@@ -69,11 +69,15 @@ class App extends React.Component {
 
   addToFavoriteState = (props) =>{
     let brewery = props.brewery
-    brewery.fave = true
-    console.log(brewery)
-    this.setState({
-      userBreweries: [...this.state.userBreweries, brewery]
-    })
+    if (!this.state.userBreweries.includes(brewery)) {
+      brewery.fave = true
+      this.setState({
+        userBreweries: [...this.state.userBreweries, brewery]
+      })
+    } else {
+      brewery.fave = false
+    }
+
   }
 
   handleRemoveClick = (props) =>{
@@ -121,7 +125,7 @@ class App extends React.Component {
   }
 
   render() {
-    console.log('app', this.state.userBreweries)
+    console.log('app', this.state.currentUser)
     // console.log('app', this.state.currentBrewery)
     if (this.state.loading){
       return (

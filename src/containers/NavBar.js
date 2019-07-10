@@ -13,14 +13,14 @@ class NavBar extends React.Component {
           {!this.props.isLogged ?
             <div className="right">
 
-              <Link to="/">Home</Link>&nbsp;
+              <Link to="/">Sign Up</Link>&nbsp;
               <Link to="/login">Login</Link>&nbsp;
 
             </div>
             :
             <div className="right">
               <p> Welcome, {this.props.userInputName}!</p>
-              <Link to="/">Home</Link>&nbsp;
+              <Link to="/">Sign Out</Link>&nbsp;
               <Link to="/profile">Profile</Link>&nbsp;
             </div>
             }
