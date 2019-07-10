@@ -10,7 +10,7 @@ class SearchBar extends React.Component {
   render() {
     return(
       <div>
-      <form className="search-form">
+      <form className="container input-field col s6">
         <input
           name="searchTerm"
           placeholder="Find Your Brew..."
