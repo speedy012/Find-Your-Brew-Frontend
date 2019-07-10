@@ -17,7 +17,7 @@ class BreweryContainer extends React.Component {
 
   render() {
     return(
-      <div>
+      <div className="row">
         {this.props.allBreweries === undefined ? '' : this.displayBreweries()}
       </div>
     )

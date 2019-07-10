@@ -87,31 +87,31 @@ class App extends React.Component {
 
   render() {
     // console.log('app', this.state.userBreweries)
-    console.log('app', this.state.isLogged)
-    console.log(this.state.currentUser.id)
+    // console.log('app', this.state.isLogged)
     return (
-      <React.Fragment>
-        <h1> Find Your Brew </h1>
-        {this.state.isLogged ? <h3> Welcome,{this.state.userInputName}</h3> : null}
-        <Switch>
-          <Route exact path="/" render={(routerprops) => {
-            return <NavBar isLogged={this.state.isLogged}/>
-          }}/>
-          <Route exact path="/breweries" component={BreweryContainer}/>
-          <Route exact path="/login" render={()=> {
-            return <Login islogged={this.state.isLogged} userInputName={this.state.userInputName} getUserName={this.getUserName} changesLog={this.changesLog}/>
-          }}/>
-          <Route exact path="/signup" render={()=> <SignUp/>}/>
-        </Switch>
-        <SearchBar
+      <div className="yellow lighten-2">
+        <React.Fragment>
+          {this.state.isLogged ? <h3> Welcome,{this.state.userInputName}</h3> : null}
+          <Switch>
+            <Route exact path="/" render={(routerprops) => {
+              return <NavBar isLogged={this.state.isLogged}/>
+            }}/>
+            <Route exact path="/breweries" component={BreweryContainer}/>
+            <Route exact path="/login" render={()=> {
+              return <Login islogged={this.state.isLogged} userInputName={this.state.userInputName} getUserName={this.getUserName} changesLog={this.changesLog}/>
+            }}/>
+            <Route exact path="/signup" render={()=> <SignUp/>}/>
+          </Switch>
+          <SearchBar
           searchTerm={this.state.searchTerm}
           setSearchTerm={this.setSearchTerm}
-        />
-        <BreweryContainer
-         allBreweries={this.applySearch()}
-         handleClick={this.handleClick}/>
+          />
+          <BreweryContainer
+           allBreweries={this.applySearch()}
+           handleClick={this.handleClick}/>
+        </React.Fragment>
+      </div>
 
-      </React.Fragment>
     )
   }
 }
