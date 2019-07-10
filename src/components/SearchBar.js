@@ -16,7 +16,7 @@ class SearchBar extends React.Component {
           placeholder="Find Your Brew..."
           value={this.props.searchTerm}
           onChange={this.handleChange}
-          className="input"/>
+          className="input black-text"/>
       </form>
       </div>
     )

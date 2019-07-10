@@ -8,22 +8,23 @@ class NavBar extends React.Component {
     // console.log('navbar', this.props);
     return(
       <div className="nav-wrapper yellow darken-2">
-      <i className="material-icons">local_drink</i>
-      <h1> Find Your Brew </h1>
-      <React.Fragment>
-        {!this.props.isLogged ?
-          <div className="right">
-            <Link to="/">Home</Link>&nbsp;
-            <Link to="/login">Login</Link>&nbsp;
+        <h1> Find Your Brew </h1>
+        <React.Fragment>
+          {!this.props.isLogged ?
+            <div className="right">
 
-          </div>
-          :
-          <div>
-            <Link to="/">Home</Link>&nbsp;
-            <Link to="/profile">Profile</Link>&nbsp;
-          </div>
-          }
-      </React.Fragment>
+              <Link to="/">Home</Link>&nbsp;
+              <Link to="/login">Login</Link>&nbsp;
+
+            </div>
+            :
+            <div className="right">
+              <p> Welcome,{this.props.userInputName}</p>
+              <Link to="/">Home</Link>&nbsp;
+              <Link to="/profile">Profile</Link>&nbsp;
+            </div>
+            }
+        </React.Fragment>
       </div>
     )
   }
