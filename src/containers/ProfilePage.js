@@ -19,6 +19,7 @@ class ProfilePage extends React.Component {
     return(
       <div>{
         <div className="row container">
+        {this.props.isLogged ? <h1>My BrewList:</h1> : null }
           {this.props.userBreweries === undefined ? '' : this.displayBreweries()}
         </div>
       }</div>

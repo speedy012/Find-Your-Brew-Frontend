@@ -18,6 +18,7 @@ class BreweryContainer extends React.Component {
   render() {
     return(
       <div className="row container">
+        <h1>Local Breweries</h1>
         {this.props.allBreweries === undefined ? '' : this.displayBreweries()}
       </div>
     )

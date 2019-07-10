@@ -44,27 +44,35 @@ class App extends React.Component {
   }
 
   handleClick = (props) =>{
-    if (this.state.currentUser){
-      console.log("favorite", props.brewery)
-      // console.log("favorite", this.state.currentUser)
-      fetch("http://localhost:3000/favorites", {
-        method: 'POST',
-        headers:{
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          user_id: this.state.currentUser.id,
-          brewery_id: props.brewery.id
-        }),
-      }).then(res => res.json())
-      .then(response => console.log(response))
-      .catch(error => console.error('Error:', error))
-      this.setState({
-        userBreweries: [...this.state.userBreweries, props.brewery]
-      });
-    } else {
+    this.state.currentUser ?
+      this.upLink(props)
+      :
       window.alert("Log in to favorite a brewery")
-    }
+  }
+
+  upLink = (props)=>{
+    this.addToFavoriteState(props)
+    console.log("favorite", props.brewery.id)
+
+    fetch("http://localhost:3000/favorites", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+          },
+      body: JSON.stringify({
+        user_id: this.state.currentUser.id,
+        brewery_id: props.brewery.id
+        })
+      })
+      .then(r=>r.json())
+      .then(res=>console.log(res))
+      .catch(err=> console.log(err))
+  }
+
+  addToFavoriteState = (props) =>{
+    this.setState({
+      userBreweries: [...this.state.userBreweries, props.brewery]
+    })
   }
 
 
@@ -92,8 +100,8 @@ class App extends React.Component {
   }
 
   render() {
-    console.log('app', this.state.userBreweries)
-    // console.log('app', this.state.currentUser)
+    // console.log('app', this.state.userBreweries)
+    // console.log('app', this.state.currentBrewery)
     if (this.state.loading){
       return (
         <div className="yellow darken-2 z-depth-3">
@@ -109,7 +117,7 @@ class App extends React.Component {
           <React.Fragment>
             <Switch>
               <Route exact path="/" render={(routerprops) => {
-                return <NavBar isLogged={this.state.isLogged}/>
+                return <NavBar isLogged={this.state.isLogged} userInputName={this.state.userInputName}/>
               }}/>
               <Route exact path="/breweries" component={BreweryContainer}/>
               <Route exact path="/login" render={()=> {
@@ -117,6 +125,10 @@ class App extends React.Component {
               }}/>
               <Route exact path="/signup" render={()=> <SignUp/>}/>
             </Switch>
+            <ProfilePage
+            userBreweries={this.state.userBreweries}
+            isLogged={this.state.isLogged}
+            />
             <SearchBar
             searchTerm={this.state.searchTerm}
             setSearchTerm={this.setSearchTerm}

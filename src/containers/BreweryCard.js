@@ -16,7 +16,7 @@ const BreweryCard = (props) =>{
               <a className="btn-floating scale-transition black hoverable" href={props.brewery.website_url}>
                 <i className="material-icons">near_me</i>
               </a>
-              <button className="btn-floating scale-transition black hoverable" onClick={(e)=>props.handleClick(props)}>
+              <button className="btn-floating scale-transition black hoverable" onClick={()=>props.handleClick(props)}>
                 <i className="material-icons">favorite</i>
               </button>
             </div>
