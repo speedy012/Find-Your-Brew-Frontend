@@ -8,7 +8,7 @@ class NavBar extends React.Component {
     // console.log('navbar', this.props);
     return(
       <div className="nav-wrapper yellow darken-2">
-        <h1> Find Your Brew </h1>
+        <h1 className="z-depth-3"> Find Your Brew </h1>
         <React.Fragment>
           {!this.props.isLogged ?
             <div className="right">

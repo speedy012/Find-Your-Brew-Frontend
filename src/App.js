@@ -19,7 +19,9 @@ class App extends React.Component {
     searchTerm: '',
     isLogged: false,
     userInputName: "",
-    currentUser: ""
+    currentUser: "",
+    currentBrewery: null,
+    loading: true
   }
 
   changesLog = (e) => {
@@ -42,27 +44,28 @@ class App extends React.Component {
   }
 
   handleClick = (props) =>{
-    console.log("favorite",props.brewery.id)
-    // console.log("favorite", this.state.currentUser)
-    fetch("http://localhost:3000/favorites", {
-      method: 'POST',
-      headers:{
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        user_id: this.state.currentUser.id,
-        brewery_id: props.brewery.id
-      }),
-    }).then(res => res.json())
-    .then(response => console.log(response))
-    .catch(error => console.error('Error:', error))
-    this.setState({
-      userBreweries: [...this.state.userBreweries, props.brewery]
-    });
-}
-    this.setState({
-      userBreweries: [...this.state.userBreweries, props]
-    })
+    if (this.state.currentUser){
+      console.log("favorite", props.brewery)
+      // console.log("favorite", this.state.currentUser)
+      fetch("http://localhost:3000/favorites", {
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          user_id: this.state.currentUser.id,
+          brewery_id: props.brewery.id
+        }),
+      }).then(res => res.json())
+      .then(response => console.log(response))
+      .catch(error => console.error('Error:', error))
+      this.setState({
+        userBreweries: [...this.state.userBreweries, props.brewery]
+      });
+    } else {
+      window.alert("Log in to favorite a brewery")
+    }
+  }
 
 
   setSearchTerm = (newSearchTerm) =>{
@@ -82,38 +85,51 @@ class App extends React.Component {
     .then(res=>res.json())
     .then(data=>{
       this.setState({
-        allBreweries: data
+        allBreweries: data,
+        loading: false
       })
     })
   }
 
   render() {
-    // console.log('app', this.state.userBreweries)
+    console.log('app', this.state.userBreweries)
     // console.log('app', this.state.currentUser)
-    return (
-      <div className="yellow lighten-1">
-        <React.Fragment>
-          <Switch>
-            <Route exact path="/" render={(routerprops) => {
-              return <NavBar isLogged={this.state.isLogged}/>
-            }}/>
-            <Route exact path="/breweries" component={BreweryContainer}/>
-            <Route exact path="/login" render={()=> {
-              return <Login islogged={this.state.isLogged} userInputName={this.state.userInputName} getUserName={this.getUserName} changesLog={this.changesLog}/>
-            }}/>
-            <Route exact path="/signup" render={()=> <SignUp/>}/>
-          </Switch>
-          <SearchBar
-          searchTerm={this.state.searchTerm}
-          setSearchTerm={this.setSearchTerm}
-          />
-          <BreweryContainer
-           allBreweries={this.applySearch()}
-           handleClick={this.handleClick}/>
-        </React.Fragment>
-      </div>
+    if (this.state.loading){
+      return (
+        <div className="yellow darken-2 z-depth-3">
+        <NavBar isLogged={this.state.isLogged}/>
+          <div className="progress yellow darken-2">
+            <div className="indeterminate"></div>
+          </div>
+        </div>
+      )
+    } else {
+      return (
+        <div className="yellow lighten-1">
+          <React.Fragment>
+            <Switch>
+              <Route exact path="/" render={(routerprops) => {
+                return <NavBar isLogged={this.state.isLogged}/>
+              }}/>
+              <Route exact path="/breweries" component={BreweryContainer}/>
+              <Route exact path="/login" render={()=> {
+                return <Login islogged={this.state.isLogged} userInputName={this.state.userInputName} getUserName={this.getUserName} changesLog={this.changesLog}/>
+              }}/>
+              <Route exact path="/signup" render={()=> <SignUp/>}/>
+            </Switch>
+            <SearchBar
+            searchTerm={this.state.searchTerm}
+            setSearchTerm={this.setSearchTerm}
+            />
+            <BreweryContainer
+             allBreweries={this.applySearch()}
+             handleClick={this.handleClick}/>
+          </React.Fragment>
+        </div>
+      )
+    }
 
-    )
+
   }
 }
 
