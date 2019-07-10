@@ -25,14 +25,14 @@ class App extends React.Component {
   changesLog = (e) => {
     e.preventDefault()
     this.setState({isLogged: !this.state.isLogged})
-     this.props.history.push("/")
-     fetch("http://localhost:3000/users/1")
-     .then(res => res.json())
-     .then(data => {
-       this.setState({
-         currentUser: data
-       })
-     })
+    this.props.history.push("/")
+    fetch("http://localhost:3000/users/1")
+    .then(res => res.json())
+    .then(data => {
+      this.setState({
+        currentUser: data
+      })
+    })
   }
 
   getUserName = (e) => {
@@ -43,25 +43,27 @@ class App extends React.Component {
 
   handleClick = (props) =>{
     console.log("favorite",props.brewery.id)
+    // console.log("favorite", this.state.currentUser)
+    fetch("http://localhost:3000/favorites", {
+      method: 'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        user_id: this.state.currentUser.id,
+        brewery_id: props.brewery.id
+      }),
+    }).then(res => res.json())
+    .then(response => console.log(response))
+    .catch(error => console.error('Error:', error))
+    this.setState({
+      userBreweries: [...this.state.userBreweries, props.brewery]
+    });
+}
     this.setState({
       userBreweries: [...this.state.userBreweries, props]
     })
-    //working on this
-    // fetch("http//:localhost:3000/favorites", {
-    //   method: "POST",
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Accept': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     user_id: this.state.currentUser.id,
-    //     brewery_id: props.brewery.id
-    //   })
-    //
-    // })
-    // .then(res=>res.json())
-    // .then(console.log())
-  }
+
 
   setSearchTerm = (newSearchTerm) =>{
     this.setState({
@@ -87,11 +89,10 @@ class App extends React.Component {
 
   render() {
     // console.log('app', this.state.userBreweries)
-    // console.log('app', this.state.isLogged)
+    // console.log('app', this.state.currentUser)
     return (
-      <div className="yellow lighten-2">
+      <div className="yellow lighten-1">
         <React.Fragment>
-          {this.state.isLogged ? <h3> Welcome,{this.state.userInputName}</h3> : null}
           <Switch>
             <Route exact path="/" render={(routerprops) => {
               return <NavBar isLogged={this.state.isLogged}/>
