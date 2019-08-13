@@ -52,7 +52,7 @@ class App extends React.Component {
   upLink = (props)=>{
     this.addToFavoriteState(props)
     // console.log("favorite", props.brewery.id)
-    fetch("http://localhost:3000/favorites", {
+    fetch("http://localhost:3000/api/v1/favorites", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -114,7 +114,7 @@ class App extends React.Component {
 
 
   componentDidMount(){
-    fetch("http://localhost:3000/breweries")
+    fetch("http://localhost:3000/api/v1/breweries")
     .then(res=>res.json())
     .then(data=>{
       this.setState({

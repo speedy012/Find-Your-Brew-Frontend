@@ -19,7 +19,7 @@ class NavBar extends React.Component {
             </div>
             :
             <div className="right">
-              <p> Welcome, {this.props.userInputName}!</p>
+              <h4> Welcome, {this.props.userInputName}!</h4>
               <Link to="/">Sign Out</Link>&nbsp;
               <Link to="/profile">Profile</Link>&nbsp;
             </div>
