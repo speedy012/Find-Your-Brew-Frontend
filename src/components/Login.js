@@ -1,22 +1,54 @@
-import React from 'react'
-import NavBar from '../containers/NavBar'
+import React, { useState } from 'react'
 
-class Login extends React.Component {
-  render() {
-    return(
-      <div>
-      <NavBar/>
-        {!this.props.isLogged?
-          <form onSubmit={this.props.changesLog}>
-            <input onChange={this.props.getUserName} placeholder="Enter a username..." name="userInputName" value={this.props.userInputName}/>
-            <input type="submit" value="Log In"/>
-          </form>
-          :
-          null
-        }
-      </div>
-    )
+
+const Login = (props) => {
+
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleUsername = e => {
+    setUsername(e.target.value)
   }
+
+  const handlePassword = e => {
+    setPassword(e.target.value)
+  }
+
+  const handleSubmit = e => {
+    // console.log("before fetch", username, password)
+    e.preventDefault()
+    fetch('http://localhost:3000/api/v1/login', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password
+      })
+    })
+    .then(res=>res.json())
+    .then(data=>{
+      console.log(data)
+      localStorage.setItem('token', data.token)
+      props.history.push("/")
+      props.handleLogin({
+        username: username,
+        password: password
+      })
+    })
+  }
+  
+  return(
+    <div>
+      <form onSubmit={(e) => handleSubmit(e)}>
+          <input type="text" name="username" placeholder="username" onChange={(e) => handleUsername(e)}/>
+          <input type="password" name="password" placeholder="password" onChange={(e) => handlePassword(e)}/>
+          <input type="submit" value="log in" />
+        </form>
+    </div>
+  )
 }
+
 
 export default Login
