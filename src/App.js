@@ -12,17 +12,18 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 const App = (props) => {
 
-  const [user, setUser] = useState('')
-  const [currentUser, setCurrentUser] = useState('')
+  const [user, setUser] = useState(null)
 
-  const logout = () => {
+  const logout = (e) => {
+    console.log("clicked")
     setUser(null)
     localStorage.removeItem("token")
     return <Redirect to="/" />
   }
 
-  const handleLogin = (data) => {
-    setCurrentUser(data)
+  const handleLogin = (user) => {
+    console.log(user)
+    setUser(user)
   }
 
   // state = {
@@ -135,17 +136,30 @@ const App = (props) => {
   //     })
   //   })
   // }
+  console.log(user)
+
   useEffect(()=>{
-    if (!!localStorage.token) {
-        fetch('http://localhost:3000/api/v1/profile', {
+
+    const token = localStorage.getItem('token')
+
+    if (token) {
+
+        fetch('http://localhost:3000/api/v1/auto_login', {
           headers: {
-            'Authorization': localStorage.getItem("token")
+            'Authorization': token
           }
         })
         .then(res => res.json())
-        .then(res => setUser(res))
-      }
-    },[currentUser])
+        .then(data => {
+          if (data.errors) {
+            localStorage.removeItem('token')
+            alert(data.errors)
+          } else {
+            setUser(data)
+          }
+        })
+    }
+  }, [])
 
   // render() {
     // console.log('app', this.state.currentUser)
@@ -162,18 +176,28 @@ const App = (props) => {
     // } else {
     return (
       <div className="yellow lighten-1">
-      <NavBar user={user} logout={logout} />
+      <NavBar
+        user={user}
+        logout={logout}
+      />
+
       <Switch>
         <Route exact path="/login" render={(props) => {
-          return <Login user={user} handleLogin={handleLogin} {...props}/>}}
-          />
+          return <Login
+          handleLogin={handleLogin}
+          {...props}/>}}
+        />
+
         <Route exact path="/signup" render={(props) => {
-          return <SignUp user={user} handleLogin={handleLogin} {...props}/>}}
+          return <SignUp
+          handleLogin={handleLogin}
+          {...props}/>}}
           />
-        <Route exact path="/"
-        render={(routerProps) => {
-          return <HomePage user={user}/>
-          }}
+
+        <Route exact path="/" render={(props) => {
+          return <HomePage
+          user={user}
+          {...props}/>}}
           />
       </Switch>
       </div>

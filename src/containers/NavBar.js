@@ -4,7 +4,7 @@ import "materialize-css/dist/css/materialize.min.css"
 
 
 const NavBar = (props) => {
-    // console.log('navbar', this.props);
+    console.log('navbar', props);
     return(
       <div className="nav-wrapper yellow darken-2">
         <h1 className="z-depth-3"> Find Your Brew </h1>
@@ -16,8 +16,8 @@ const NavBar = (props) => {
             </div>
             :
             <div className="right">
-              <h4> Welcome, {props.userInputName}!</h4>
-              <button id="button" onClick={props.logout}> Log out </button>
+              <h4> Welcome, {props.user.username}!</h4>
+              <button id="button" onClick={(e) => props.logout(e)}> Log out </button>
               <Link to="/profile">Profile</Link>&nbsp;
             </div>
             }

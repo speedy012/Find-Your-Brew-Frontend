@@ -20,30 +20,44 @@ const Login = (props) => {
     fetch('http://localhost:3000/api/v1/login', {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Accepts": "application/json"
       },
       body: JSON.stringify({
-        username: username,
-        password: password
+        user:{
+          username: username,
+          password: password
+        }
       })
     })
     .then(res=>res.json())
     .then(data=>{
-      console.log(data)
-      localStorage.setItem('token', data.token)
-      props.history.push("/")
-      props.handleLogin({
-        username: username,
-        password: password
-      })
+      if (data.errors) {
+        alert(data.errors)
+      } else {
+        console.log(data)
+        localStorage.setItem('token', data.jwt)
+        props.handleLogin(data.user)
+        props.history.push("/")
+      }
     })
   }
-  
+
   return(
     <div>
       <form onSubmit={(e) => handleSubmit(e)}>
-          <input type="text" name="username" placeholder="username" onChange={(e) => handleUsername(e)}/>
-          <input type="password" name="password" placeholder="password" onChange={(e) => handlePassword(e)}/>
+          <input
+            type="text"
+            name="username"
+            placeholder="username"
+            onChange={(e) => handleUsername(e)}
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="password"
+            onChange={(e) => handlePassword(e)}
+          />
           <input type="submit" value="log in" />
         </form>
     </div>
