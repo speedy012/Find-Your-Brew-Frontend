@@ -22,15 +22,23 @@ const App = (props) => {
     }
   }
 
+  // brewery state
+  const [breweries, setBreweries] = useState([])
+  const breweryUrl = "http://localhost:3000/api/v1/breweries"
+  const breweryFetchConfig = {
+    headers: {
+      'Authorization': token
+    }
+  }
+
+  // logout and login functions for signup and login page
   const logout = (e) => {
-    console.log("clicked")
     setUser(null)
     localStorage.removeItem("token")
-    return <Redirect to="/" />
+    return <Redirect to="/login" />
   }
 
   const handleLogin = (user) => {
-    console.log(user)
     setUser(user)
   }
 
@@ -42,25 +50,6 @@ const App = (props) => {
   //   userInputName: "",
   //   currentUser: "",
   //   loading: true
-  // }
-  //
-  // changesLog = (e) => {
-  //   e.preventDefault()
-  //   this.setState({isLogged: !this.state.isLogged})
-  //   this.props.history.push("/")
-  //   fetch("http://localhost:3000/users/2")
-  //   .then(res => res.json())
-  //   .then(data => {
-  //     this.setState({
-  //       currentUser: data
-  //     })
-  //   })
-  // }
-  //
-  // getUserName = (e) => {
-  //   e.preventDefault()
-  //   console.log(e.target.value)
-  //   this.setState({[e.target.name]: e.target.value})
   // }
   //
   // handleAddClick = (props) =>{
@@ -119,53 +108,37 @@ const App = (props) => {
   //   })
   // }
   //
-  //
-  // setSearchTerm = (newSearchTerm) =>{
-  //   this.setState({
-  //     searchTerm: newSearchTerm
-  //   })
-  // }
-  //
-  // applySearch = () =>{
-  //   return this.state.allBreweries.filter(brewery=> {
-  //     return brewery.name.toLowerCase().includes(this.state.searchTerm.toLowerCase())
-  //   })
-  // }
+
+  //apply search term
 
 
-
-  // componentDidMount(){
-  //   fetch("http://localhost:3000/api/v1/breweries")
-  //   .then(res=>res.json())
-  //   .then(data=>{
-  //     this.setState({
-  //       allBreweries: data,
-  //       loading: false
-  //     })
-  //   })
-  // }
-  console.log(user)
+  // console.log(breweries)
 
   useEffect(()=>{
 
+    //load breweries
+    fetch(breweryUrl, breweryFetchConfig)
+    .then(res=>res.json())
+    .then(data=>{
+      console.log(data)
+      setBreweries(data)
+    })
+
+    //auto_login user
     if (token) {
-
-        fetch(userUrl, userFetchConfig)
-        .then(res => res.json())
-        .then(data => {
-          if (data.errors) {
-            localStorage.removeItem('token')
-            alert(data.errors)
-          } else {
-            setUser(data)
-          }
-        })
+      fetch(userUrl, userFetchConfig)
+      .then(res => res.json())
+      .then(data => {
+        if (data.errors) {
+          localStorage.removeItem('token')
+          alert(data.errors)
+        } else {
+          setUser(data)
+        }
+      })
     }
-  }, [token])
+  }, [])  //dependecies go in empty array?
 
-  // render() {
-    // console.log('app', this.state.currentUser)
-    // console.log('app', this.state.currentBrewery)
     // if (this.state.loading){
     //   return (
     //     <div className="yellow darken-2 z-depth-3">
@@ -199,6 +172,7 @@ const App = (props) => {
         <Route exact path="/" render={(props) => {
           return <HomePage
           user={user}
+          breweries={breweries}
           {...props}/>}}
           />
       </Switch>

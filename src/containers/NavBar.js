@@ -4,7 +4,7 @@ import "materialize-css/dist/css/materialize.min.css"
 
 
 const NavBar = (props) => {
-    console.log('navbar', props);
+    // console.log('navbar', props);
     return(
       <div className="nav-wrapper yellow darken-2">
         <h1 className="z-depth-3"> Find Your Brew </h1>

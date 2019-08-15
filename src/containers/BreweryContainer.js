@@ -5,12 +5,11 @@ import "materialize-css/dist/css/materialize.min.css"
 class BreweryContainer extends React.Component {
 
   displayBreweries = () =>{
-    return this.props.allBreweries.map(brewery =>{
-      return <
-      BreweryCard
-      key={brewery.id}
-      brewery={brewery}
-      handleClick={this.props.handleAddClick}
+    return this.props.breweries.map(brewery =>{
+      return <BreweryCard
+        key={brewery.id}
+        brewery={brewery}
+        handleClick={this.props.handleAddClick}
       />
     })
   }
@@ -19,7 +18,7 @@ class BreweryContainer extends React.Component {
     return(
       <div className="row container">
         <h1>Local Breweries</h1>
-        {this.props.allBreweries === undefined ? '' : this.displayBreweries()}
+        {this.props.breweries === undefined ? '' : this.displayBreweries()}
       </div>
     )
   }

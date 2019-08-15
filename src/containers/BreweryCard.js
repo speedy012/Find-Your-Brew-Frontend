@@ -23,7 +23,7 @@ class BreweryCard  extends React.Component {
   }
   // console.log(props)
   render(){
-    console.log(this.state.form)
+    // console.log(this.state.form)
     return(
       <div >
         <div className="col s12 m6">
