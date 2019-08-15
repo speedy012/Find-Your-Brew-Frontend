@@ -12,7 +12,15 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 const App = (props) => {
 
+  // user state and auto_login config
   const [user, setUser] = useState(null)
+  const token = localStorage.getItem('token')
+  const userUrl = 'http://localhost:3000/api/v1/auto_login'
+  const userFetchConfig = {
+    headers: {
+      'Authorization': token
+    }
+  }
 
   const logout = (e) => {
     console.log("clicked")
@@ -140,15 +148,9 @@ const App = (props) => {
 
   useEffect(()=>{
 
-    const token = localStorage.getItem('token')
-
     if (token) {
 
-        fetch('http://localhost:3000/api/v1/auto_login', {
-          headers: {
-            'Authorization': token
-          }
-        })
+        fetch(userUrl, userFetchConfig)
         .then(res => res.json())
         .then(data => {
           if (data.errors) {
@@ -159,7 +161,7 @@ const App = (props) => {
           }
         })
     }
-  }, [])
+  }, [token])
 
   // render() {
     // console.log('app', this.state.currentUser)

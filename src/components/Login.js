@@ -1,10 +1,29 @@
 import React, { useState } from 'react'
+import { useFetch } from '../hooks/fetch.js'
 
 
 const Login = (props) => {
 
+  //login form state and fetch hook initialization
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+
+  //fetch config
+  const url = 'http://localhost:3000/api/v1/login'
+  const fetchConfig = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accepts": "application/json"
+    },
+    body: JSON.stringify({
+      user:{
+        username: username,
+        password: password
+      }
+    })
+  }
 
   const handleUsername = e => {
     setUsername(e.target.value)
@@ -15,32 +34,20 @@ const Login = (props) => {
   }
 
   const handleSubmit = e => {
-    // console.log("before fetch", username, password)
+
     e.preventDefault()
-    fetch('http://localhost:3000/api/v1/login', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accepts": "application/json"
-      },
-      body: JSON.stringify({
-        user:{
-          username: username,
-          password: password
-        }
-      })
-    })
+    fetch(url, fetchConfig)
     .then(res=>res.json())
     .then(data=>{
       if (data.errors) {
         alert(data.errors)
-      } else {
-        console.log(data)
+      }
+      else {
         localStorage.setItem('token', data.jwt)
         props.handleLogin(data.user)
         props.history.push("/")
       }
-    })
+    }).catch(console.log)
   }
 
   return(
