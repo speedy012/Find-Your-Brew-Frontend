@@ -12,8 +12,12 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 const App = (props) => {
 
-  // user state and auto_login config
+  //app loader
+  const [loading, setLoading] = useState(true)
+
+  // user state, location, and auto_login config
   const [user, setUser] = useState(null)
+  const [userLocation, setUserLocation] = useState({userLat: "0", userLong: "0"})
   const token = localStorage.getItem('token')
   const userUrl = 'http://localhost:3000/api/v1/auto_login'
   const userFetchConfig = {
@@ -43,13 +47,13 @@ const App = (props) => {
   }
 
   // state = {
-  //   allBreweries: [],
+  //   allBreweries: [], done
   //   userBreweries: [],
-  //   searchTerm: '',
+  //   searchTerm: '', done
   //   isLogged: false,
-  //   userInputName: "",
-  //   currentUser: "",
-  //   loading: true
+  //   userInputName: "", done
+  //   currentUser: "", done
+  //   loading: true done
   // }
   //
   // handleAddClick = (props) =>{
@@ -112,20 +116,30 @@ const App = (props) => {
   //apply search term
 
 
-  // console.log(breweries)
+
 
   useEffect(()=>{
+    console.log("useEffect triggers")
 
-    //load breweries
-    fetch(breweryUrl, breweryFetchConfig)
-    .then(res=>res.json())
-    .then(data=>{
-      console.log(data)
-      setBreweries(data)
-    })
+    //get and set user location
+    const success = (pos) => {
+      let crd = pos.coords;
+      setUserLocation({ userLat: crd.latitude, userLong: crd.longitude })
+    }
 
-    //auto_login user
+    const error = (err) => {
+      alert(`ERROR(${err.code}): ${err.message}`);
+    }
+    const userLocation = navigator.geolocation.getCurrentPosition(success, error)
+
     if (token) {
+      //load breweries
+      fetch(breweryUrl, breweryFetchConfig)
+      .then(res=>res.json())
+      .then(data=>{
+        setBreweries(data)
+      })
+      //auto_login user
       fetch(userUrl, userFetchConfig)
       .then(res => res.json())
       .then(data => {
@@ -134,51 +148,64 @@ const App = (props) => {
           alert(data.errors)
         } else {
           setUser(data)
+          setLoading(false)
         }
       })
     }
-  }, [])  //dependecies go in empty array?
+  }, [])  //dependecies go in array per guides, leaving array empty makes useEffect run once?
 
-    // if (this.state.loading){
-    //   return (
-    //     <div className="yellow darken-2 z-depth-3">
-    //     <NavBar isLogged={this.state.isLogged}/>
-    //       <div className="progress yellow darken-2">
-    //         <div className="indeterminate"></div>
-    //       </div>
-    //     </div>
-    //   )
-    // } else {
-    return (
-      <div className="yellow lighten-1">
-      <NavBar
-        user={user}
-        logout={logout}
-      />
-
-      <Switch>
-        <Route exact path="/login" render={(props) => {
-          return <Login
-          handleLogin={handleLogin}
-          {...props}/>}}
+  //conditional app return
+  // if (loading && token) {
+  //   return (
+  //     <div className="yellow darken-2 z-depth-3">
+  //     <NavBar />
+  //       <div className="progress yellow darken-2">
+  //         <div className="indeterminate"></div>
+  //       </div>
+  //     </div>
+  //   )
+  // } else {
+    // console.log("app loaded", user, userLocation, breweries)
+      return (
+        <div className="yellow lighten-1">
+        <NavBar
+          user={user}
+          logout={logout}
         />
 
-        <Route exact path="/signup" render={(props) => {
-          return <SignUp
-          handleLogin={handleLogin}
-          {...props}/>}}
+        <Switch>
+          <Route exact path="/login" render={(props) => {
+            return <Login
+            handleLogin={handleLogin}
+            {...props}/>}}
           />
 
-        <Route exact path="/" render={(props) => {
-          return <HomePage
-          user={user}
-          breweries={breweries}
-          {...props}/>}}
-          />
-      </Switch>
-      </div>
-    )
-  }
+          <Route exact path="/signup" render={(props) => {
+            return <SignUp
+            handleLogin={handleLogin}
+            {...props}/>}}
+            />
+
+          <Route exact path="/profile" render={(props) => {
+            return <ProfilePage
+            user={user}
+            userLocation={userLocation}
+            breweries={breweries}
+            {...props}/>}}
+            />
+
+          <Route exact path="/" render={(props) => {
+            return <HomePage
+            user={user}
+            userLocation={userLocation}
+            breweries={breweries}
+            {...props}/>}}
+            />
+        </Switch>
+        </div>
+      )
+    }
+  // } // comment out for loading troubleshoot
 
 
 

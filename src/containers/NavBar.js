@@ -5,25 +5,29 @@ import "materialize-css/dist/css/materialize.min.css"
 
 const NavBar = (props) => {
     // console.log('navbar', props);
+
+  if (!props.user) {
     return(
       <div className="nav-wrapper yellow darken-2">
         <h1 className="z-depth-3"> Find Your Brew </h1>
-        <React.Fragment>
-          {!props.user ?
             <div className="right">
               <Link to="/signup">Sign Up</Link>&nbsp;
               <Link to="/login">Login</Link>&nbsp;
             </div>
-            :
-            <div className="right">
-              <h4> Welcome, {props.user.username}!</h4>
-              <button id="button" onClick={(e) => props.logout(e)}> Log out </button>
-              <Link to="/profile">Profile</Link>&nbsp;
-            </div>
-            }
-        </React.Fragment>
       </div>
     )
+  } else {
+    return(
+      <div className="nav-wrapper yellow darken-2">
+        <h1 className="z-depth-3"> Find Your Brew </h1>
+          <div className="right">
+            <h4> Welcome, {props.user.username}!</h4>
+            <button id="button" onClick={(e) => props.logout(e)}> Log out </button>
+            <Link to="/profile">Profile</Link>&nbsp;
+          </div>
+      </div>
+    )
+  }
 }
 
 export default NavBar

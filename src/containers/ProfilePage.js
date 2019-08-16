@@ -1,30 +1,35 @@
-import React from 'react'
-import BreweryCard from './BreweryCard'
+import React, { useState } from 'react'
+import SearchBar from '../components/SearchBar'
+import BreweryContainer from './BreweryContainer'
 import "materialize-css/dist/css/materialize.min.css"
 
-class ProfilePage extends React.Component {
+const ProfilePage = (props) => {
 
-  displayBreweries = () =>{
-    return this.props.userBreweries.map(brewery =>{
-      return <
-      BreweryCard
-      key={brewery.id}
-      brewery={brewery}
-      handleClick={this.props.handleRemoveClick}
+
+  //search state
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const applySearch = () =>{
+     return props.breweries.filter(brewery=> {
+       return brewery.name.toLowerCase().includes(searchTerm.toLowerCase())
+     })
+   }
+
+  return(
+    <div className="homepage">
+      <p>ProfilePage for {props.user.username}</p>
+
+      <SearchBar
+        searchTerm={searchTerm}
+        setSearchTerm={props.setSearchTerm}
       />
-    })
-  }
-
-  render() {
-    return(
-      <div>
-      {this.props.isLogged ? <h1>My BrewList:</h1> : null }
-        <div className="row container">
-          {this.props.userBreweries === undefined ? '' : this.displayBreweries()}
-        </div>
-      </div>
-    )
-  }
+      <BreweryContainer
+        breweries={props.breweries}
+        searchTerm={searchTerm}
+        setSearchTerm={props.setSearchTerm}
+        applySearch={props.applySearch}/>
+    </div>
+  )
 }
 
 export default ProfilePage

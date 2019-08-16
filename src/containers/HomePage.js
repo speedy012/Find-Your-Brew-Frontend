@@ -8,22 +8,22 @@ const HomePage = (props) => {
   const [searchTerm, setSearchTerm] = useState('')
 
   const applySearch = () =>{
-    return props.breweries.filter(brewery=> {
-      return brewery.name.toLowerCase().includes(searchTerm.toLowerCase())
-    })
-  }
+     return props.breweries.filter(brewery=> {
+       return brewery.name.toLowerCase().includes(searchTerm.toLowerCase())
+     })
+   }
 
   return(
     <div className="homepage">
       <p>HomePage</p>
       <SearchBar
         searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
+        setSearchTerm={props.setSearchTerm}
       />
       <BreweryContainer
-        breweries={applySearch()}
+        breweries={props.breweries}
         searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
+        setSearchTerm={props.setSearchTerm}
         applySearch={props.applySearch}/>
     </div>
   )
