@@ -167,21 +167,42 @@ const App = (props) => {
         }
       })
     }
-  }, [])  //dependecies go in array per guides, leaving array empty makes useEffect run once?
+  }, [loading])  //dependecies go in array per guides, leaving array empty makes useEffect run once?
 
   //conditional return needs to account for loading breweries, getting user & user location,
   // and presence of localStorage token
 
-  // if (loading && token) {
-  //   return (
-  //     <div className="yellow darken-2 z-depth-3">
-  //     <NavBar />
-  //       <div className="progress yellow darken-2">
-  //         <div className="indeterminate"></div>
-  //       </div>
-  //     </div>
-  //   )
-  // } else {
+  if (!token) {
+    return (
+      <div className="yellow lighten-1">
+      <NavBar
+        user={user}
+        logout={logout}
+      />
+        <Switch>
+          <Route exact path="/login" render={(props) => {
+            return <Login
+            handleLogin={handleLogin}
+            {...props}/>}}
+          />
+          <Route exact path="/signup" render={(props) => {
+            return <SignUp
+            handleLogin={handleLogin}
+            {...props}/>}}
+            />
+        </Switch>
+      </div>
+    )
+  } else if (loading && token) {
+    return (
+      <div className="yellow darken-2 z-depth-3">
+      <NavBar />
+        <div className="progress yellow darken-2">
+          <div className="indeterminate"></div>
+        </div>
+      </div>
+    )
+  } else if (!loading && token ){
     console.log("app loaded", user)
       return (
         <div className="yellow lighten-1">
@@ -189,28 +210,25 @@ const App = (props) => {
           user={user}
           logout={logout}
         />
-
         <Switch>
           <Route exact path="/login" render={(props) => {
             return <Login
             handleLogin={handleLogin}
             {...props}/>}}
           />
-
           <Route exact path="/signup" render={(props) => {
             return <SignUp
             handleLogin={handleLogin}
             {...props}/>}}
             />
-
+          //user profile page will display followed breweries w/ability to make notes
           <Route exact path="/profile" render={(props) => {
             return <ProfilePage
             user={user}
-            userLocation={userLocation}
             breweries={user.breweries}
             {...props}/>}}
             />
-
+          //homepage will display local breweries on a map for user to follow/visit
           <Route exact path="/" render={(props) => {
             return <HomePage
             user={user}
@@ -223,7 +241,7 @@ const App = (props) => {
         </div>
       )
     }
-  // } // comment out for loading troubleshoot
+  } // comment out for loading troubleshoot
 
 
 
