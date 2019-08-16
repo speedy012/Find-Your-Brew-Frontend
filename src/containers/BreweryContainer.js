@@ -2,23 +2,23 @@ import React from 'react'
 import BreweryCard from './BreweryCard'
 import "materialize-css/dist/css/materialize.min.css"
 
-class BreweryContainer extends React.Component {
+const BreweryContainer = (props) => {
 
-  displayBreweries = () =>{
-    return this.props.breweries.map(brewery =>{
+  const displayBreweries = () =>{
+    return props.breweries.map(brewery =>{
       return <BreweryCard
         key={brewery.id}
         brewery={brewery}
-        handleClick={this.props.handleAddClick}
+        handleLike={props.handleLike}
       />
     })
   }
 
-  render() {
+  if (props.breweries) {
     return(
       <div className="row container">
         <h1>Local Breweries</h1>
-        {this.props.breweries === undefined ? '' : this.displayBreweries()}
+        {displayBreweries()}
       </div>
     )
   }

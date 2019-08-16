@@ -20,7 +20,8 @@ const App = (props) => {
   const [userLocation, setUserLocation] = useState({userLat: "0", userLong: "0"})
   const token = localStorage.getItem('token')
   const userUrl = 'http://localhost:3000/api/v1/auto_login'
-  const userFetchConfig = {
+  // auth token for all fetch requests
+  const fetchConfig = {
     headers: {
       'Authorization': token
     }
@@ -29,11 +30,6 @@ const App = (props) => {
   // brewery state
   const [breweries, setBreweries] = useState([])
   const breweryUrl = "http://localhost:3000/api/v1/breweries"
-  const breweryFetchConfig = {
-    headers: {
-      'Authorization': token
-    }
-  }
 
   // logout and login functions for signup and login page
   const logout = (e) => {
@@ -44,6 +40,30 @@ const App = (props) => {
 
   const handleLogin = (user) => {
     setUser(user)
+  }
+
+  //brewery like and dislike
+
+  const handleLike = (breweryId) => {
+
+    console.log("clicked", breweryId)
+
+    // post brewery id to users breweries
+    fetch(`http://localhost:3000/api/v1/favorite/${user.id}/brewery/${breweryId}`, fetchConfig)
+    .then(res=>res.json())
+    .then(data=>{
+      if (data.errors) {
+        console.log(data)
+        alert(data.errors)
+      }
+      else {
+        console.log(data)
+        // localStorage.setItem('token', data.jwt)
+        // props.handleLogin(data.user)
+        // props.history.push("/")
+      }
+    }).catch(console.log)
+
   }
 
   // state = {
@@ -113,11 +133,6 @@ const App = (props) => {
   // }
   //
 
-  //apply search term
-
-
-
-
   useEffect(()=>{
     console.log("useEffect triggers")
 
@@ -134,13 +149,13 @@ const App = (props) => {
 
     if (token) {
       //load breweries
-      fetch(breweryUrl, breweryFetchConfig)
+      fetch(breweryUrl, fetchConfig)
       .then(res=>res.json())
       .then(data=>{
         setBreweries(data)
       })
       //auto_login user
-      fetch(userUrl, userFetchConfig)
+      fetch(userUrl, fetchConfig)
       .then(res => res.json())
       .then(data => {
         if (data.errors) {
@@ -154,7 +169,9 @@ const App = (props) => {
     }
   }, [])  //dependecies go in array per guides, leaving array empty makes useEffect run once?
 
-  //conditional app return
+  //conditional return needs to account for loading breweries, getting user & user location,
+  // and presence of localStorage token
+
   // if (loading && token) {
   //   return (
   //     <div className="yellow darken-2 z-depth-3">
@@ -165,7 +182,7 @@ const App = (props) => {
   //     </div>
   //   )
   // } else {
-    // console.log("app loaded", user, userLocation, breweries)
+    console.log("app loaded", user)
       return (
         <div className="yellow lighten-1">
         <NavBar
@@ -190,7 +207,7 @@ const App = (props) => {
             return <ProfilePage
             user={user}
             userLocation={userLocation}
-            breweries={breweries}
+            breweries={user.breweries}
             {...props}/>}}
             />
 
@@ -199,6 +216,7 @@ const App = (props) => {
             user={user}
             userLocation={userLocation}
             breweries={breweries}
+            handleLike={handleLike}
             {...props}/>}}
             />
         </Switch>
