@@ -124,11 +124,10 @@ const App = (props) => {
 
   const filterBreweries = () => {
     return breweries.filter(brewery => {
-      if
-      (parseFloat(brewery.latitude) <= parseFloat(userLocation.latitude) + 1
-      && parseFloat(brewery.latitude) >= parseFloat(userLocation.latitude) - 1
-      && parseFloat(brewery.longitude) <= parseFloat(userLocation.longitude) + 1
-      && parseFloat(brewery.longitude) >= parseFloat(userLocation.longitude) - 1)
+      if (parseFloat(brewery.latitude) <= parseFloat(userLocation.latitude) + 1
+        && parseFloat(brewery.latitude) >= parseFloat(userLocation.latitude) - 1
+        && parseFloat(brewery.longitude) <= parseFloat(userLocation.longitude) + 1
+        && parseFloat(brewery.longitude) >= parseFloat(userLocation.longitude) - 1)
       { return brewery }
     })
   }
@@ -153,6 +152,7 @@ const App = (props) => {
       .then(res=>res.json())
       .then(data=>{
         setBreweries(data)
+        setLoading(false)
       })
       //auto_login user
       fetch(userUrl, fetchConfig)
@@ -163,14 +163,13 @@ const App = (props) => {
           alert(data.errors)
         } else {
           setUser(data)
-          setLoading(false)
         }
       })
     }
   }, [loading])  //dependecies go in array per guides, leaving array empty makes useEffect run once?
 
   //conditional return needs to account for loading breweries, getting user & user location,
-  // and presence of localStorage token
+  // and presence of localStorage token for login
 
   if (!token) {
     return (
