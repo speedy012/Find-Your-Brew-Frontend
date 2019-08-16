@@ -17,7 +17,7 @@ const App = (props) => {
 
   // user state, location, and auto_login config
   const [user, setUser] = useState(null)
-  const [userLocation, setUserLocation] = useState({userLat: "0", userLong: "0"})
+  const [userLocation, setUserLocation] = useState({ latitude: "0", longitude: "0"})
   const token = localStorage.getItem('token')
   const userUrl = 'http://localhost:3000/api/v1/auto_login'
   // auth token for all fetch requests
@@ -43,7 +43,6 @@ const App = (props) => {
   }
 
   //brewery like and dislike
-
   const handleFollow = (breweryId) => {
 
     // post brewery id to users breweries
@@ -60,7 +59,6 @@ const App = (props) => {
         // props.history.push("/")
       }
     }).catch(console.log)
-
   }
 
   // state = {
@@ -73,12 +71,6 @@ const App = (props) => {
   //   loading: true done
   // }
   //
-  // handleAddClick = (props) =>{
-  //   this.state.currentUser ?
-  //     this.upLink(props)
-  //     :
-  //     window.alert("Log in to favorite a brewery")
-  // }
   //
   // upLink = (props)=>{
   //   this.addToFavoriteState(props)
@@ -130,13 +122,24 @@ const App = (props) => {
   // }
   //
 
+  const filterBreweries = () => {
+    return breweries.filter(brewery => {
+      if
+      (parseFloat(brewery.latitude) <= parseFloat(userLocation.latitude) + 1
+      && parseFloat(brewery.latitude) >= parseFloat(userLocation.latitude) - 1
+      && parseFloat(brewery.longitude) <= parseFloat(userLocation.longitude) + 1
+      && parseFloat(brewery.longitude) >= parseFloat(userLocation.longitude) - 1)
+      { return brewery }
+    })
+  }
+
   useEffect(()=>{
     console.log("useEffect triggers")
 
     //get and set user location
     const success = (pos) => {
       let crd = pos.coords;
-      setUserLocation({ userLat: crd.latitude, userLong: crd.longitude })
+      setUserLocation({ latitude: crd.latitude, longitude: crd.longitude })
     }
 
     const error = (err) => {
@@ -200,7 +203,7 @@ const App = (props) => {
       </div>
     )
   } else if (!loading && token ){
-    console.log("app loaded", user)
+    console.log("app loaded", breweries[0])
       return (
         <div className="yellow lighten-1">
         <NavBar
@@ -231,7 +234,7 @@ const App = (props) => {
             return <HomePage
             user={user}
             userLocation={userLocation}
-            breweries={breweries}
+            breweries={filterBreweries()}
             handleFollow={handleFollow}
             {...props}/>}}
             />
