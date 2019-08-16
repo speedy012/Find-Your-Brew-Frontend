@@ -22,7 +22,7 @@ const BreweryCard = (props) => {
       <div >
         <div className="col s12 m6">
           <div className="card yellow darken-2 z-depth-3">
-            <div className="card-content black-text" onClick={e=>props.handleLike(props.brewery.id)}>
+            <div className="card-content black-text" onClick={e=>props.handleFollow(props.brewery.id)}>
               <span className="card-title truncate">{props.brewery.name}</span>
               <p>Brewery Type: {props.brewery.brewery_type.charAt(0).toUpperCase()+props.brewery.brewery_type.slice(1)}</p>
               <p>{props.brewery.street}</p>

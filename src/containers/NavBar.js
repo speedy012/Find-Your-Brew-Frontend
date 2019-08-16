@@ -24,6 +24,7 @@ const NavBar = (props) => {
             <h4> Welcome, {props.user.username}!</h4>
             <button id="button" onClick={(e) => props.logout(e)}> Log out </button>
             <Link to="/profile">Profile</Link>&nbsp;
+            <Link to="/">Home</Link>&nbsp;
           </div>
       </div>
     )

@@ -9,7 +9,7 @@ const BreweryContainer = (props) => {
       return <BreweryCard
         key={brewery.id}
         brewery={brewery}
-        handleLike={props.handleLike}
+        handleFollow={props.handleFollow}
       />
     })
   }

@@ -24,7 +24,7 @@ const HomePage = (props) => {
       />
       <BreweryContainer
         breweries={props.breweries}
-        handleLike={props.handleLike}
+        handleFollow={props.handleFollow}
         searchTerm={searchTerm}
         setSearchTerm={props.setSearchTerm}
         applySearch={props.applySearch}/>

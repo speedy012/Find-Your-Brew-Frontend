@@ -20,8 +20,8 @@ const ProfilePage = (props) => {
   //useEffect to get breweries favorited by user
 
   return(
-    <div className="homepage">
-      <p>ProfilePage for {props.user.username}</p>
+    <div className="profilepage">
+      <p>Profile Page for {props.user.username}</p>
 
       <SearchBar
         searchTerm={searchTerm}
@@ -29,6 +29,7 @@ const ProfilePage = (props) => {
       />
       <BreweryContainer
         breweries={props.breweries}
+        handleFollow={props.handleFollow}
         searchTerm={searchTerm}
         setSearchTerm={props.setSearchTerm}
         applySearch={props.applySearch}/>

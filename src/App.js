@@ -44,20 +44,17 @@ const App = (props) => {
 
   //brewery like and dislike
 
-  const handleLike = (breweryId) => {
-
-    console.log("clicked", breweryId)
+  const handleFollow = (breweryId) => {
 
     // post brewery id to users breweries
     fetch(`http://localhost:3000/api/v1/favorite/${user.id}/brewery/${breweryId}`, fetchConfig)
     .then(res=>res.json())
     .then(data=>{
       if (data.errors) {
-        console.log(data)
         alert(data.errors)
       }
       else {
-        console.log(data)
+        console.log(`${user.breweries.last.name} has been added to your profile`)
         // localStorage.setItem('token', data.jwt)
         // props.handleLogin(data.user)
         // props.history.push("/")
@@ -226,6 +223,7 @@ const App = (props) => {
             return <ProfilePage
             user={user}
             breweries={user.breweries}
+            handleFollow={handleFollow}
             {...props}/>}}
             />
           //homepage will display local breweries on a map for user to follow/visit
@@ -234,7 +232,7 @@ const App = (props) => {
             user={user}
             userLocation={userLocation}
             breweries={breweries}
-            handleLike={handleLike}
+            handleFollow={handleFollow}
             {...props}/>}}
             />
         </Switch>
