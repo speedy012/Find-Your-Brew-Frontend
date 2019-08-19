@@ -23,7 +23,7 @@ const NavBar = (props) => {
           <div className="right">
             <h4> Welcome, {props.user.username}!</h4>
             <button id="button" onClick={(e) => props.logout(e)}> Log out </button>
-            <Link to="/profile">Profile</Link>&nbsp;
+            <Link to="/profile" onClick={(e) => props.setLoading(true)}>Profile</Link>&nbsp;
             <Link to="/">Home</Link>&nbsp;
           </div>
       </div>

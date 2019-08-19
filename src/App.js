@@ -42,86 +42,18 @@ const App = (props) => {
     setUser(user)
   }
 
-  //brewery like and dislike
+  //brewery follow and unfollow
   const handleFollow = (breweryId) => {
 
     // post brewery id to users breweries
     fetch(`http://localhost:3000/api/v1/favorite/${user.id}/brewery/${breweryId}`, fetchConfig)
     .then(res=>res.json())
     .then(data=>{
-      if (data.errors) {
-        alert(data.errors)
-      }
-      else {
-        console.log(`${user.breweries.last.name} has been added to your profile`)
-        // localStorage.setItem('token', data.jwt)
-        // props.handleLogin(data.user)
-        // props.history.push("/")
-      }
+        alert(`${user.breweries.last.name} has been added to your profile`)
     }).catch(console.log)
   }
 
-  // state = {
-  //   allBreweries: [], done
-  //   userBreweries: [],
-  //   searchTerm: '', done
-  //   isLogged: false,
-  //   userInputName: "", done
-  //   currentUser: "", done
-  //   loading: true done
-  // }
-  //
-  //
-  // upLink = (props)=>{
-  //   this.addToFavoriteState(props)
-  //   // console.log("favorite", props.brewery.id)
-  //   fetch("http://localhost:3000/api/v1/favorites", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json"
-  //         },
-  //     body: JSON.stringify({
-  //       user_id: this.state.currentUser.id,
-  //       brewery_id: props.brewery.id
-  //       })
-  //     })
-  //     .then(r=>r.json())
-  //     .then(res=>console.log(res))
-  //     .catch(err=> console.log(err))
-  // }
-  //
-  // addToFavoriteState = (props) =>{
-  //   let brewery = props.brewery
-  //   if (!this.state.userBreweries.includes(brewery)) {
-  //     brewery.fave = true
-  //     this.setState({
-  //       userBreweries: [...this.state.userBreweries, brewery]
-  //     })
-  //   } else {
-  //     brewery.fave = false
-  //   }
-  //
-  // }
-  //
-  // handleRemoveClick = (props) =>{
-  //   let foundBrewery = this.state.userBreweries.find(brewery => brewery.id === props.brewery.id)
-  //   foundBrewery.fave = false
-  //   console.log(foundBrewery)
-  //   let updatedArr = []
-  //   this.state.userBreweries.map(brewery =>{
-  //     if (brewery.id === foundBrewery.id){
-  //
-  //     } else {
-  //       updatedArr.push(brewery)
-  //     }
-  //   })
-  //   this.setState({
-  //     userBreweries: updatedArr,
-  //     allBreweries: [...this.state.allBreweries, foundBrewery]
-  //   })
-  // }
-  //
-
+  //filter breweries by location and search term
   const filterBreweries = () => {
     return breweries.filter(brewery => {
       if (parseFloat(brewery.latitude) <= parseFloat(userLocation.latitude) + 1
@@ -132,8 +64,9 @@ const App = (props) => {
     })
   }
 
+  //componentDidMount
   useEffect(()=>{
-    console.log("useEffect triggers")
+    // console.log("useEffect triggers")
 
     //get and set user location
     const success = (pos) => {
@@ -194,38 +127,32 @@ const App = (props) => {
     )
   } else if (loading && token) {
     return (
-      <div className="yellow darken-2 z-depth-3">
+      <div className="yellow lighten-1">
       <NavBar />
+        <h4> Finding local breweries... </h4>
         <div className="progress yellow darken-2">
           <div className="indeterminate"></div>
         </div>
       </div>
     )
   } else if (!loading && token ){
-    console.log("app loaded", breweries[0])
+    // console.log("app loaded", breweries[0])
       return (
         <div className="yellow lighten-1">
         <NavBar
           user={user}
           logout={logout}
+          setLoading={setLoading}
         />
         <Switch>
-          <Route exact path="/login" render={(props) => {
-            return <Login
-            handleLogin={handleLogin}
-            {...props}/>}}
-          />
-          <Route exact path="/signup" render={(props) => {
-            return <SignUp
-            handleLogin={handleLogin}
-            {...props}/>}}
-            />
-          //user profile page will display followed breweries w/ability to make notes
+          //profile page will display breweries a user has followed w/ability to make notes
           <Route exact path="/profile" render={(props) => {
             return <ProfilePage
             user={user}
-            breweries={user.breweries}
             handleFollow={handleFollow}
+            breweries={user.breweries}
+            loading={loading}
+            setLoading={setLoading}
             {...props}/>}}
             />
           //homepage will display local breweries on a map for user to follow/visit

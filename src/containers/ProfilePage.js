@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import SearchBar from '../components/SearchBar'
 import BreweryContainer from './BreweryContainer'
 import "materialize-css/dist/css/materialize.min.css"
 
 const ProfilePage = (props) => {
 
-  //profile page should mirror home page but with favorited breweries
-
-
   //search state
   const [searchTerm, setSearchTerm] = useState('')
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value)
+  }
 
   const applySearch = () => {
      return props.breweries.filter(brewery=> {
@@ -17,22 +18,26 @@ const ProfilePage = (props) => {
      })
    }
 
-  //useEffect to get breweries favorited by user
+  //componentDidMount
+  useEffect(()=>{
+    // console.log("useE", loading)
+    props.setLoading(false)
+  }, [props.loading, props.breweries])
+
 
   return(
     <div className="profilepage">
-      <p>Profile Page for {props.user.username}</p>
-
       <SearchBar
         searchTerm={searchTerm}
-        setSearchTerm={props.setSearchTerm}
+        setSearchTerm={setSearchTerm}
+        handleSearchChange={handleSearchChange}
       />
+      <h1>Your Breweries</h1>
       <BreweryContainer
-        breweries={props.breweries}
+        breweries={applySearch()}
         handleFollow={props.handleFollow}
-        searchTerm={searchTerm}
-        setSearchTerm={props.setSearchTerm}
-        applySearch={props.applySearch}/>
+        note={true}
+      />
     </div>
   )
 }

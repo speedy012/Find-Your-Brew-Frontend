@@ -10,6 +10,7 @@ const BreweryContainer = (props) => {
         key={brewery.id}
         brewery={brewery}
         handleFollow={props.handleFollow}
+        note={props.note}
       />
     })
   }
@@ -17,7 +18,6 @@ const BreweryContainer = (props) => {
   if (props.breweries) {
     return(
       <div className="row container">
-        <h1>Local Breweries</h1>
         {displayBreweries()}
       </div>
     )

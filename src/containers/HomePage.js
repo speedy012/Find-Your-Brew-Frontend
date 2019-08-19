@@ -4,10 +4,12 @@ import BreweryContainer from './BreweryContainer'
 
 const HomePage = (props) => {
 
-  //home page should be a map like yelp? stretch
-
-  //search state
+  //home page should be a map like yelp? stretch goal
   const [searchTerm, setSearchTerm] = useState('')
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value)
+  }
 
   const applySearch = () => {
      return props.breweries.filter(brewery=> {
@@ -17,17 +19,17 @@ const HomePage = (props) => {
 
   return(
     <div className="homepage">
-      <p>HomePage</p>
       <SearchBar
         searchTerm={searchTerm}
-        setSearchTerm={props.setSearchTerm}
+        setSearchTerm={setSearchTerm}
+        handleSearchChange={handleSearchChange}
       />
+      <h1>Local Breweries</h1>
       <BreweryContainer
-        breweries={props.breweries}
+        breweries={applySearch()}
         handleFollow={props.handleFollow}
-        searchTerm={searchTerm}
-        setSearchTerm={props.setSearchTerm}
-        applySearch={props.applySearch}/>
+        note={false}
+      />
     </div>
   )
 }

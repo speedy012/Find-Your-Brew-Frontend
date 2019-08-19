@@ -3,11 +3,6 @@ import "materialize-css/dist/css/materialize.min.css"
 
 const SearchBar = (props) => {
 
-
-  const handleChange = (event) => {
-    props.setSearchTerm(event.target.value)
-  }
-
   return(
     <div>
       <form className="container input-field col s6">
@@ -15,7 +10,7 @@ const SearchBar = (props) => {
           name="searchTerm"
           placeholder="Find Your Brew..."
           value={props.searchTerm}
-          onChange={(e) => handleChange(e)}
+          onChange={(e) => props.handleSearchChange(e)}
           className="input black-text"/>
       </form>
     </div>

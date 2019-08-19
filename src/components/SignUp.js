@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
-import { useFetch } from '../hooks/fetch.js'
-
-
+// import { useFetch } from '../hooks/fetch.js'
 
 const SignUp = (props) => {
 
