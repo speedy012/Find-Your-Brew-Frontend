@@ -32,7 +32,7 @@ const App = (props) => {
   const breweryUrl = "http://localhost:3000/api/v1/breweries"
 
   // logout and login functions for signup and login page
-  const logout = (e) => {
+  const logout = () => {
     setUser(null)
     localStorage.removeItem("token")
     return <Redirect to="/login" />
@@ -43,14 +43,13 @@ const App = (props) => {
   }
 
   //brewery follow and unfollow
-  const handleFollow = (breweryId) => {
-
+  const handleFollow = (brewery) => {
     // post brewery id to users breweries
-    fetch(`http://localhost:3000/api/v1/favorite/${user.id}/brewery/${breweryId}`, fetchConfig)
-    .then(res=>res.json())
-    .then(data=>{
-        alert(`${user.breweries.last.name} has been added to your profile`)
-    }).catch(console.log)
+    console.log(brewery)
+    fetch(`http://localhost:3000/api/v1/favorite/${user.id}/brewery/${brewery.id}`, fetchConfig)
+    if (user.breweries.includes(brewery))
+      { alert(`${brewery.name} has been removed from your profile`) }
+    else { alert(`${brewery.name} has been added to your profile`) }
   }
 
   //filter breweries by location and search term
@@ -79,7 +78,7 @@ const App = (props) => {
     }
     const userLocation = navigator.geolocation.getCurrentPosition(success, error)
 
-    if (token) {
+    if (token && breweries.length === 0) {
       //load breweries
       fetch(breweryUrl, fetchConfig)
       .then(res=>res.json())
@@ -136,13 +135,10 @@ const App = (props) => {
       </div>
     )
   } else if (!loading && token ){
-    // console.log("app loaded", breweries[0])
       return (
         <div className="yellow lighten-1">
         <NavBar
           user={user}
-          logout={logout}
-          setLoading={setLoading}
         />
         <Switch>
           //profile page will display breweries a user has followed w/ability to make notes
@@ -150,9 +146,6 @@ const App = (props) => {
             return <ProfilePage
             user={user}
             handleFollow={handleFollow}
-            breweries={user.breweries}
-            loading={loading}
-            setLoading={setLoading}
             {...props}/>}}
             />
           //homepage will display local breweries on a map for user to follow/visit

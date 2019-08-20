@@ -5,7 +5,7 @@ const SearchBar = (props) => {
 
   return(
     <div>
-      <form className="container input-field col s6">
+      <form className="container input-field col s4">
         <input
           name="searchTerm"
           placeholder="Find Your Brew..."
