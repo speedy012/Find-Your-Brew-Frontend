@@ -78,7 +78,6 @@ const ProfilePage = (props) => {
           setSearchTerm={setSearchTerm}
           handleSearchChange={handleSearchChange}
         />
-        <h1>Your Breweries</h1>
         <BreweryContainer
           breweries={applySearch()}
           handleFollow={handleUnfollow}

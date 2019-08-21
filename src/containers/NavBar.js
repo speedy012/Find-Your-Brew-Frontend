@@ -1,36 +1,64 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import "materialize-css/dist/css/materialize.min.css"
+import M from "materialize-css/dist/css/materialize.min.css"
 
 
 const NavBar = (props) => {
-    // console.log('navbar', props);
 
+  //state to trigger Materialize css
+  const [profileActive, setProfileActive] = useState(false)
+  const [localBreweriesActive, setLocalBreweriesActive] = useState(false)
+
+  //interpolate HTML for active vs inactive Materialize css
+  const profileHTML = profileActive ? "active" : ""
+  const localBreweriesHTML = localBreweriesActive ? "active" : ""
+
+  const handleClick = (e) => {
+    e.preventDefault()
+    if (e.target.innerHTML === "Profile") {
+      setProfileActive(true)
+      setLocalBreweriesActive(false)
+    } else if (e.target.innerHTML === "Local Breweries") {
+      setLocalBreweriesActive(true)
+      setProfileActive(false)
+    }
+  }
+
+  // console.log(active)
   if (!props.user) {
     return(
-      <div className="nav-wrapper yellow darken-2">
-        <div className="z-depth-3">
-        <h1>Find Your Brew</h1>
-            <div className="right">
-              <Link to="/signup">Sign Up</Link>&nbsp;
-              <Link to="/login">Login</Link>&nbsp;
-            </div>
-         </div>
-      </div>
+      <nav>
+        <div className="nav-wrapper yellow darken-2">
+        <a className="brand-logo black-text">Find Your Brew</a>
+        <ul id="nav-mobile z-depth-3" className="right hide-on-med-and-down">
+          <li><a><Link to="/login">Login</Link></a></li>
+          <li><a><Link to="/signup">Sign up</Link></a></li>
+        </ul>
+        </div>
+      </nav>
     )
   } else {
     return(
-      <div className="nav-wrapper yellow darken-2">
-        <div className="z-depth-3">
-          <h1> Find Your Brew </h1>
-          <div className="right">
-            <h4> Welcome, {props.user.username}!</h4>
-              <Link to="/profile">Profile</Link>&nbsp;
-              <Link to="/">Local Breweries</Link>&nbsp;
-              <button id="button" onClick={e => props.logout()}> Log out </button>
+      <div className="navbar-fixed">
+        <nav>
+          <div className="nav-wrapper yellow darken-2">
+          <a className="brand-logo black-text">Find Your Brew</a>
+          <ul id="nav-mobile z-depth-3" className="right hide-on-med-and-down">
+            <li
+              onClick={e => handleClick(e)}
+              className={profileHTML}>
+              <a><Link to="/profile">Profile</Link></a>
+            </li>
+            <li
+              onClick={e => handleClick(e)}
+              className={localBreweriesHTML}>
+              <a><Link to="/">Local Breweries</Link></a>
+            </li>
+            <li><a><button id="button" onClick={e => props.logout()}> Log out </button></a></li>
+          </ul>
           </div>
-        </div>
-      </div>
+        </nav>
+    </div>
     )
   }
 }

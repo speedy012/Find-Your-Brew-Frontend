@@ -24,7 +24,6 @@ const HomePage = (props) => {
         setSearchTerm={setSearchTerm}
         handleSearchChange={handleSearchChange}
       />
-      <h1>Local Breweries</h1>
       <BreweryContainer
         breweries={applySearch()}
         handleFollow={props.handleFollow}
