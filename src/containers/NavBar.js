@@ -17,7 +17,7 @@ const NavBar = (props) => {
 
   const handleClick = (e) => {
     e.preventDefault()
-    if (e.target.innerHTML === "Profile") {
+    if (e.target.innerHTML === "My Profile") {
       setProfileActive(true)
       setLocalBreweriesActive(false)
     } else if (e.target.innerHTML === "Local Breweries") {
