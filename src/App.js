@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import logo from './logo.svg';
 // import './App.css';
-import "materialize-css/dist/css/materialize.min.css"
+import M from "materialize-css/dist/js/materialize.min.js";
 import NavBar from './containers/NavBar'
 import ProfilePage from './containers/ProfilePage'
 import BreweryContainer from './containers/BreweryContainer'
@@ -47,9 +47,7 @@ const App = (props) => {
     // post brewery id to users breweries
     console.log(brewery)
     fetch(`http://localhost:3000/api/v1/favorite/${user.id}/brewery/${brewery.id}`, fetchConfig)
-    if (user.breweries.includes(brewery))
-      { alert(`${brewery.name} has been removed from your profile`) }
-    else { alert(`${brewery.name} has been added to your profile`) }
+    M.toast({html: `${brewery.name} has been added to your profile`})
   }
 
   //filter breweries by location and search term
@@ -139,13 +137,13 @@ const App = (props) => {
         <div className="yellow lighten-1">
         <NavBar
           user={user}
+          logout={logout}
         />
         <Switch>
           //profile page will display breweries a user has followed w/ability to make notes
           <Route exact path="/profile" render={(props) => {
             return <ProfilePage
             user={user}
-            handleFollow={handleFollow}
             {...props}/>}}
             />
           //homepage will display local breweries on a map for user to follow/visit

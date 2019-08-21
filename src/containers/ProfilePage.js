@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import SearchBar from '../components/SearchBar'
 import BreweryContainer from './BreweryContainer'
-import "materialize-css/dist/css/materialize.min.css"
+import M from "materialize-css/dist/js/materialize.min.js";
 
 const ProfilePage = (props) => {
+
+
 
   const [loading, setLoading] = useState(true)
 
@@ -38,6 +40,7 @@ const ProfilePage = (props) => {
     // post brewery id to users breweries
     console.log(brewery)
     fetch(`http://localhost:3000/api/v1/favorite/${props.user.id}/brewery/${brewery.id}`, fetchConfig)
+    M.toast({html: `${brewery.name} has been removed from your profile`});
     setLoading(true)
   }
 
