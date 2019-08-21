@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-// import logo from './logo.svg';
-// import './App.css';
 import M from "materialize-css/dist/js/materialize.min.js";
 import NavBar from './containers/NavBar'
 import ProfilePage from './containers/ProfilePage'
-import BreweryContainer from './containers/BreweryContainer'
 import HomePage from './containers/HomePage'
 import SignUp from './components/SignUp'
 import Login from './components/Login'
@@ -45,7 +42,6 @@ const App = (props) => {
   //brewery follow and unfollow
   const handleFollow = (brewery) => {
     // post brewery id to users breweries
-    console.log(brewery)
     fetch(`http://localhost:3000/api/v1/favorite/${user.id}/brewery/${brewery.id}`, fetchConfig)
     M.toast({html: `${brewery.name} has been added to your profile`})
   }
@@ -60,6 +56,14 @@ const App = (props) => {
       { return brewery }
     })
   }
+
+  //lifted state search term for moving searchbar to navbar
+  //search state and filter
+  // const [searchTerm, setSearchTerm] = useState('')
+  //
+  // const handleSearchChange = (event) => {
+  //   setSearchTerm(event.target.value)
+  // }
 
   //componentDidMount
   useEffect(()=>{
@@ -76,7 +80,7 @@ const App = (props) => {
     }
     const userLocation = navigator.geolocation.getCurrentPosition(success, error)
 
-    if (token && breweries.length === 0) {
+    if (token) {
       //load breweries
       fetch(breweryUrl, fetchConfig)
       .then(res=>res.json())
@@ -98,7 +102,7 @@ const App = (props) => {
     }
   }, [loading])  //dependecies go in array per guides, leaving array empty makes useEffect run once?
 
-  //conditional return needs to account for loading breweries, getting user & user location,
+  //conditional return accounts for loading breweries, getting user & user location,
   // and presence of localStorage token for login
 
   if (!token) {

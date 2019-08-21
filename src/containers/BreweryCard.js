@@ -36,7 +36,8 @@ const BreweryCard = (props) => {
             <p>{props.brewery.street}</p>
             <p>{props.brewery.city}, {props.brewery.state}</p>
             <div className="card-action">
-              <a className="btn-floating scale-transition black hoverable"
+              <a href={props.brewery.website_url}
+              className="btn-floating scale-transition black hoverable"
               onClick={() => window.open(props.brewery.website_url)}>
                 <i className="material-icons">near_me</i>
               </a>

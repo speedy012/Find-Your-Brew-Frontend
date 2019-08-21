@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import M from "materialize-css/dist/css/materialize.min.css"
+// import SearchBar from '../containers/NavBar'
+import "materialize-css/dist/css/materialize.min.css"
+
 
 
 const NavBar = (props) => {
@@ -29,10 +31,10 @@ const NavBar = (props) => {
     return(
       <nav>
         <div className="nav-wrapper yellow darken-2">
-        <a className="brand-logo black-text">Find Your Brew</a>
+        <a href="/" className="brand-logo black-text">Find Your Brew</a>
         <ul id="nav-mobile z-depth-3" className="right hide-on-med-and-down">
-          <li><a><Link to="/login">Login</Link></a></li>
-          <li><a><Link to="/signup">Sign up</Link></a></li>
+          <li><a href="/login"><Link to="/login">Login</Link></a></li>
+          <li><a href="/signup"><Link to="/signup">Sign up</Link></a></li>
         </ul>
         </div>
       </nav>
@@ -42,20 +44,22 @@ const NavBar = (props) => {
       <div className="navbar-fixed">
         <nav>
           <div className="nav-wrapper yellow darken-2">
-          <a className="brand-logo black-text">Find Your Brew</a>
-          <ul id="nav-mobile z-depth-3" className="right hide-on-med-and-down">
-            <li
-              onClick={e => handleClick(e)}
-              className={profileHTML}>
-              <a><Link to="/profile">Profile</Link></a>
-            </li>
-            <li
-              onClick={e => handleClick(e)}
-              className={localBreweriesHTML}>
-              <a><Link to="/">Local Breweries</Link></a>
-            </li>
-            <li><a><button id="button" onClick={e => props.logout()}> Log out </button></a></li>
-          </ul>
+            <a href="/" className="brand-logo black-text">Find Your Brew</a>
+            <ul id="nav-mobile z-depth-3" className="right hide-on-med-and-down">
+              <li
+                onClick={e => handleClick(e)}
+                className={profileHTML}>
+                <a href="/profile"><Link to="/profile">My Profile</Link></a>
+              </li>
+              <li
+                onClick={e => handleClick(e)}
+                className={localBreweriesHTML}>
+                <a href="/"><Link to="/">Local Breweries</Link></a>
+              </li>
+              <li>
+                <a href="/"><Link to="/" onClick={e => props.logout()}> Log Out </Link></a>
+              </li>
+            </ul>
           </div>
         </nav>
     </div>

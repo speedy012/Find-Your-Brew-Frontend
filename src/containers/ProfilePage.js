@@ -5,8 +5,6 @@ import M from "materialize-css/dist/js/materialize.min.js";
 
 const ProfilePage = (props) => {
 
-
-
   const [loading, setLoading] = useState(true)
 
   //user fetch config
@@ -60,7 +58,8 @@ const ProfilePage = (props) => {
 
   }, [loading])
 
-  console.log(userBreweries)
+  //conditional return accounts for loading user's breweries
+
   if (loading) {
     return (
       <div className="yellow lighten-1">
