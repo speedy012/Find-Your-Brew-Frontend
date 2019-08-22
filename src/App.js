@@ -59,11 +59,11 @@ const App = (props) => {
 
   //lifted state search term for moving searchbar to navbar
   //search state and filter
-  // const [searchTerm, setSearchTerm] = useState('')
-  //
-  // const handleSearchChange = (event) => {
-  //   setSearchTerm(event.target.value)
-  // }
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value)
+  }
 
   //componentDidMount
   useEffect(()=>{
@@ -111,6 +111,9 @@ const App = (props) => {
       <NavBar
         user={user}
         logout={logout}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        handleSearchChange={handleSearchChange}
       />
         <Switch>
           <Route exact path="/login" render={(props) => {

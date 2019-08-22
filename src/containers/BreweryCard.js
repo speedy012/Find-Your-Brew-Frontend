@@ -29,14 +29,14 @@ const BreweryCard = (props) => {
   return(
     <div >
       <div className="col s12 m6">
-        <div className="card yellow darken-2 z-depth-3">
+        <div className="card yellow darken-2 z-depth-3 hoverable">
           <div className="card-content black-text">
             <span className="card-title truncate">{props.brewery.name}</span>
             <p>Brewery Type: {props.brewery.brewery_type.charAt(0).toUpperCase()+props.brewery.brewery_type.slice(1)}</p>
             <p>{props.brewery.street}</p>
             <p>{props.brewery.city}, {props.brewery.state}</p>
             <div className="card-action">
-              <a href={props.brewery.website_url}
+              <a
               className="btn-floating scale-transition black hoverable"
               onClick={() => window.open(props.brewery.website_url)}>
                 <i className="material-icons">near_me</i>
