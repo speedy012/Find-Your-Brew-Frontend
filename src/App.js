@@ -1,174 +1,173 @@
-import React from 'react';
-// import logo from './logo.svg';
-// import './App.css';
-import "materialize-css/dist/css/materialize.min.css"
+import React, { useState, useEffect } from 'react';
+import M from "materialize-css/dist/js/materialize.min.js";
 import NavBar from './containers/NavBar'
 import ProfilePage from './containers/ProfilePage'
-import BreweryContainer from './containers/BreweryContainer'
-import SearchBar from './components/SearchBar'
-import { Route, Switch } from 'react-router-dom'
+import HomePage from './containers/HomePage'
 import SignUp from './components/SignUp'
 import Login from './components/Login'
-import { withRouter } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
-class App extends React.Component {
+const App = (props) => {
 
-  state = {
-    allBreweries: [],
-    userBreweries: [],
-    searchTerm: '',
-    isLogged: false,
-    userInputName: "",
-    currentUser: "",
-    loading: true
+  //app loader
+  const [loading, setLoading] = useState(true)
+
+  // user state, location, and auto_login config
+  const [user, setUser] = useState(null)
+  const [userLocation, setUserLocation] = useState({ latitude: "0", longitude: "0"})
+  const token = localStorage.getItem('token')
+  const userUrl = 'http://localhost:3000/api/v1/auto_login'
+  // auth token for all fetch requests
+  const fetchConfig = {
+    headers: {
+      'Authorization': token
+    }
   }
 
-  changesLog = (e) => {
-    e.preventDefault()
-    this.setState({isLogged: !this.state.isLogged})
-    this.props.history.push("/")
-    fetch("http://localhost:3000/users/2")
-    .then(res => res.json())
-    .then(data => {
-      this.setState({
-        currentUser: data
-      })
+  // brewery state
+  const [breweries, setBreweries] = useState([])
+  const breweryUrl = "http://localhost:3000/api/v1/breweries"
+
+  // logout and login functions for signup and login page
+  const logout = () => {
+    setUser(null)
+    localStorage.removeItem("token")
+    return <Redirect to="/login" />
+  }
+
+  const handleLogin = (user) => {
+    setUser(user)
+  }
+
+  //brewery follow and unfollow
+  const handleFollow = (brewery) => {
+    // post brewery id to users breweries
+    fetch(`http://localhost:3000/api/v1/favorite/${user.id}/brewery/${brewery.id}`, fetchConfig)
+    M.toast({html: `${brewery.name} has been added to your profile`})
+  }
+
+  //filter breweries by location and search term
+  const filterBreweries = () => {
+    return breweries.filter(brewery => {
+      if (parseFloat(brewery.latitude) <= parseFloat(userLocation.latitude) + 1
+        && parseFloat(brewery.latitude) >= parseFloat(userLocation.latitude) - 1
+        && parseFloat(brewery.longitude) <= parseFloat(userLocation.longitude) + 1
+        && parseFloat(brewery.longitude) >= parseFloat(userLocation.longitude) - 1)
+      { return brewery }
     })
   }
 
-  getUserName = (e) => {
-    e.preventDefault()
-    console.log(e.target.value)
-    this.setState({[e.target.name]: e.target.value})
+  //lifted state search term for moving searchbar to navbar
+  //search state and filter
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value)
   }
 
-  handleAddClick = (props) =>{
-    this.state.currentUser ?
-      this.upLink(props)
-      :
-      window.alert("Log in to favorite a brewery")
-  }
+  //componentDidMount
+  useEffect(()=>{
+    // console.log("useEffect triggers")
 
-  upLink = (props)=>{
-    this.addToFavoriteState(props)
-    // console.log("favorite", props.brewery.id)
-    fetch("http://localhost:3000/favorites", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-          },
-      body: JSON.stringify({
-        user_id: this.state.currentUser.id,
-        brewery_id: props.brewery.id
-        })
-      })
-      .then(r=>r.json())
-      .then(res=>console.log(res))
-      .catch(err=> console.log(err))
-  }
-
-  addToFavoriteState = (props) =>{
-    let brewery = props.brewery
-    if (!this.state.userBreweries.includes(brewery)) {
-      brewery.fave = true
-      this.setState({
-        userBreweries: [...this.state.userBreweries, brewery]
-      })
-    } else {
-      brewery.fave = false
+    //get and set user location
+    const success = (pos) => {
+      let crd = pos.coords;
+      setUserLocation({ latitude: crd.latitude, longitude: crd.longitude })
     }
 
-  }
+    const error = (err) => {
+      alert(`ERROR(${err.code}): ${err.message}`);
+    }
+    const userLocation = navigator.geolocation.getCurrentPosition(success, error)
 
-  handleRemoveClick = (props) =>{
-    let foundBrewery = this.state.userBreweries.find(brewery => brewery.id === props.brewery.id)
-    foundBrewery.fave = false
-    console.log(foundBrewery)
-    let updatedArr = []
-    this.state.userBreweries.map(brewery =>{
-      if (brewery.id === foundBrewery.id){
-
-      } else {
-        updatedArr.push(brewery)
-      }
-    })
-    this.setState({
-      userBreweries: updatedArr,
-      allBreweries: [...this.state.allBreweries, foundBrewery]
-    })
-  }
-
-
-  setSearchTerm = (newSearchTerm) =>{
-    this.setState({
-      searchTerm: newSearchTerm
-    })
-  }
-
-  applySearch = () =>{
-    return this.state.allBreweries.filter(brewery=> {
-      return brewery.name.toLowerCase().includes(this.state.searchTerm.toLowerCase())
-    })
-  }
-
-
-
-  componentDidMount(){
-    fetch("http://localhost:3000/breweries")
-    .then(res=>res.json())
-    .then(data=>{
-      this.setState({
-        allBreweries: data,
-        loading: false
+    if (token) {
+      //load breweries
+      fetch(breweryUrl, fetchConfig)
+      .then(res=>res.json())
+      .then(data=>{
+        setBreweries(data)
+        setLoading(false)
       })
-    })
-  }
+      //auto_login user
+      fetch(userUrl, fetchConfig)
+      .then(res => res.json())
+      .then(data => {
+        if (data.errors) {
+          localStorage.removeItem('token')
+          alert(data.errors)
+        } else {
+          setUser(data)
+        }
+      })
+    }
+  }, [loading])  //dependecies go in array per guides, leaving array empty makes useEffect run once?
 
-  render() {
-    console.log('app', this.state.currentUser)
-    // console.log('app', this.state.currentBrewery)
-    if (this.state.loading){
-      return (
-        <div className="yellow darken-2 z-depth-3">
-        <NavBar isLogged={this.state.isLogged}/>
-          <div className="progress yellow darken-2">
-            <div className="indeterminate"></div>
-          </div>
+  //conditional return accounts for loading breweries, getting user & user location,
+  // and presence of localStorage token for login
+
+  if (!token) {
+    return (
+      <div className="yellow lighten-1">
+      <NavBar
+        user={user}
+        logout={logout}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        handleSearchChange={handleSearchChange}
+      />
+        <Switch>
+          <Route exact path="/login" render={(props) => {
+            return <Login
+            handleLogin={handleLogin}
+            {...props}/>}}
+          />
+          <Route exact path="/signup" render={(props) => {
+            return <SignUp
+            handleLogin={handleLogin}
+            {...props}/>}}
+            />
+        </Switch>
+      </div>
+    )
+  } else if (loading && token) {
+    return (
+      <div className="yellow lighten-1">
+      <NavBar />
+        <h4> Finding local breweries... </h4>
+        <div className="progress yellow darken-2">
+          <div className="indeterminate"></div>
         </div>
-      )
-    } else {
+      </div>
+    )
+  } else if (!loading && token ){
       return (
         <div className="yellow lighten-1">
-          <React.Fragment>
-            <Switch>
-              <Route exact path="/" render={(routerprops) => {
-                return <NavBar isLogged={this.state.isLogged} userInputName={this.state.userInputName}/>
-              }}/>
-              <Route exact path="/breweries" component={BreweryContainer}/>
-              <Route exact path="/login" render={()=> {
-                return <Login islogged={this.state.isLogged} userInputName={this.state.userInputName} getUserName={this.getUserName} changesLog={this.changesLog}/>
-              }}/>
-              <Route exact path="/signup" render={()=> <SignUp/>}/>
-            </Switch>
-            <ProfilePage
-            userBreweries={this.state.userBreweries}
-            isLogged={this.state.isLogged}
-            handleRemoveClick={this.handleRemoveClick}
+        <NavBar
+          user={user}
+          logout={logout}
+        />
+        <Switch>
+          //profile page will display breweries a user has followed w/ability to make notes
+          <Route exact path="/profile" render={(props) => {
+            return <ProfilePage
+            user={user}
+            {...props}/>}}
             />
-            <SearchBar
-            searchTerm={this.state.searchTerm}
-            setSearchTerm={this.setSearchTerm}
+          //homepage will display local breweries on a map for user to follow/visit
+          <Route exact path="/" render={(props) => {
+            return <HomePage
+            user={user}
+            userLocation={userLocation}
+            breweries={filterBreweries()}
+            handleFollow={handleFollow}
+            {...props}/>}}
             />
-            <BreweryContainer
-             allBreweries={this.applySearch()}
-             handleAddClick={this.handleAddClick}/>
-          </React.Fragment>
+        </Switch>
         </div>
       )
     }
+  } // comment out for loading troubleshoot
 
 
-  }
-}
 
-export default withRouter(App);
+export default App;

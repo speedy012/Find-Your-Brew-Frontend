@@ -1,26 +1,21 @@
 import React from 'react'
 import "materialize-css/dist/css/materialize.min.css"
 
-class SearchBar extends React.Component {
+const SearchBar = (props) => {
 
-  handleChange = (event) => {
-    this.props.setSearchTerm(event.target.value)
-  }
-
-  render() {
-    return(
-      <div>
-      <form className="container input-field col s6">
+  return(
+    <div>
+      <form className="container input-field col s4">
         <input
           name="searchTerm"
           placeholder="Find Your Brew..."
-          value={this.props.searchTerm}
-          onChange={this.handleChange}
+          value={props.searchTerm}
+          onChange={(e) => props.handleSearchChange(e)}
           className="input black-text"/>
       </form>
-      </div>
-    )
-  }
+    </div>
+  )
 }
+
 
 export default SearchBar
