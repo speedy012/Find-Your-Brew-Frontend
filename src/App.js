@@ -81,13 +81,6 @@ const App = (props) => {
     const userLocation = navigator.geolocation.getCurrentPosition(success, error)
 
     if (token) {
-      //load breweries
-      fetch(breweryUrl, fetchConfig)
-      .then(res=>res.json())
-      .then(data=>{
-        setBreweries(data)
-        setLoading(false)
-      })
       //auto_login user
       fetch(userUrl, fetchConfig)
       .then(res => res.json())
@@ -98,6 +91,13 @@ const App = (props) => {
         } else {
           setUser(data)
         }
+      })
+      //load breweries
+      fetch(breweryUrl, fetchConfig)
+      .then(res=>res.json())
+      .then(data=>{
+        setBreweries(data)
+        setLoading(false)
       })
     }
   }, [loading])  //dependecies go in array per guides, leaving array empty makes useEffect run once?
